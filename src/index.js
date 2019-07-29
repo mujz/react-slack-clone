@@ -14,6 +14,7 @@ import { CreateRoomForm } from './components/CreateRoomForm'
 import { WelcomeScreen } from './components/WelcomeScreen'
 import { JoinRoomScreen } from './components/JoinRoomScreen'
 
+import { API_SERVER_BASE_URL, GITHUB_CLIENT_ID } from './constants'
 import ChatManager from './chatkit'
 
 // --------------------------------------
@@ -222,7 +223,7 @@ class View extends React.Component {
     'Notification' in window && Notification.requestPermission()
     existingUser
       ? ChatManager(this, JSON.parse(existingUser))
-      : fetch('https://chatkit-demo-server.herokuapp.com/auth', {
+      : fetch(`${API_SERVER_BASE_URL}/auth`, {
           method: 'POST',
           body: JSON.stringify({ code: authCode }),
         })
@@ -306,10 +307,9 @@ const authCode = params.get('code')
 const existingUser = window.localStorage.getItem('chatkit-user')
 
 const githubAuthRedirect = () => {
-  const client = '20cdd317000f92af12fe'
+  const client = GITHUB_CLIENT_ID
   const url = 'https://github.com/login/oauth/authorize'
-  const server = 'https://chatkit-demo-server.herokuapp.com'
-  const redirect = `${server}/success?url=${window.location.href.split('?')[0]}`
+  const redirect = `${API_SERVER_BASE_URL}/success?url=${window.location.href.split('?')[0]}`
   window.location = `${url}?scope=user:email&client_id=${client}&redirect_uri=${redirect}`
 }
 
